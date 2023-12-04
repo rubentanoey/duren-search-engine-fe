@@ -6,6 +6,7 @@ export const Container: React.FC<ContainerProps> = ({
   children,
   onClick,
   isLoading,
+  useAnimation,
 }) => {
   return (
     <>
@@ -15,7 +16,10 @@ export const Container: React.FC<ContainerProps> = ({
           isLoading
             ? "border-black disabled:bg-orange-dark"
             : "disabled:bg-cream-normal"
-        } disabled:text-primaryContainer disabled:drop-shadow-none disabled:bg-transparent hover:scale-[102%] cursor-pointer select-none transition-all ease-in-out duration-300 active:scale-[98%] active:bg-icons/50`}
+        } disabled:text-primaryContainer disabled:drop-shadow-none disabled:bg-transparent cursor-pointer select-none ${
+          useAnimation &&
+          "hover:scale-[102%] transition-all ease-in-out duration-300 active:scale-[98%] active:bg-icons/50"
+        }`}
       >
         {isLoading ? (
           <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-inherit"></div>

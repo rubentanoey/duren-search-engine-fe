@@ -25,6 +25,7 @@ export default function Details() {
   };
 
   const handleDocument = async () => {
+    setDocumentDetail(undefined);
     if (doc_idGiven) {
       try {
         const response = await axios.get(
@@ -40,8 +41,9 @@ export default function Details() {
       console.log("Search error: No document id given");
     }
   };
-
+  
   const handleRelDocs = async () => {
+    setRelDocsList(undefined);
     if (doc_idGiven) {
       try {
         const response = await axios.get(
@@ -133,7 +135,7 @@ export default function Details() {
                   key={index}
                   onClick={() => handleDocumentClick(result.id)}
                 >
-                  <Container className="flex w-full">
+                  <Container className="flex w-full" useAnimation>
                     <div className="text-primaryText text-base font-bold">
                       {result.title}
                     </div>

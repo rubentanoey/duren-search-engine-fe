@@ -11,17 +11,21 @@ import {
   Dropdown,
   TextField,
 } from "../../components/elements";
-import { DocumentsProps } from "../interfaces";
+import { DeocumentsResponseProps, DocumentsProps } from "../interfaces";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function Result() {
-  const [dateTime, setDateTime] = useState<Date>(new Date());
-  const [searchValue, setSearchValue] = useState<string>("");
-  const [methodValue, setMethodValue] = useState<string>("");
-  const [searchResult, setSearchResult] = useState<Array<DocumentsProps>>([]);
-
   const router = useRouter();
   const searchParams = useSearchParams();
   let pageGiven = "1";
+
+  const [dateTime, setDateTime] = useState<Date>(new Date());
+  const [searchValue, setSearchValue] = useState<string>(
+    searchParams.get("query") || ""
+  );
+  const [methodValue, setMethodValue] = useState<string>("");
+  const [searchResult, setSearchResult] = useState<DeocumentsResponseProps>();
+  const [timer, setTimer] = useState<number>();
 
   const hour = dateTime.getHours();
   let greeting;
@@ -82,12 +86,15 @@ export default function Result() {
   const handleSearchResult = async () => {
     const methodGiven = searchParams.get("method");
     const queryGiven = searchParams.get("query");
+    setSearchResult(undefined);
     try {
       const deviceId = localStorage.getItem("device_id");
       console.log(deviceId);
       if (methodGiven?.includes("+")) {
         const substring = methodGiven.split("+");
         const method = substring[0];
+        // set timer start
+        const timerStart = new Date();
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/search/${method}`,
           {
@@ -99,9 +106,14 @@ export default function Result() {
             },
           }
         );
-        setSearchResult(response.data.data);
+        // set timer end
+        const timerEnd = new Date();
+        const timeDiff = timerEnd.getTime() - timerStart.getTime();
+        setTimer(timeDiff / 1000);
+        setSearchResult(response.data);
         console.log("Search success:", response.data);
       } else {
+        const timerStart = new Date();
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/search/${methodGiven}`,
           {
@@ -113,13 +125,20 @@ export default function Result() {
             },
           }
         );
-        setSearchResult(response.data.data);
+        const timerEnd = new Date();
+        const timeDiff = timerEnd.getTime() - timerStart.getTime();
+        setTimer(timeDiff / 1000);
+        setSearchResult(response.data);
         console.log("Search success:", response.data);
       }
     } catch (error) {
       // Handle errors
       console.error("Search error:", error);
     }
+  };
+
+  const handleHome = () => {
+    router.push("/");
   };
 
   useEffect(() => {
@@ -138,7 +157,7 @@ export default function Result() {
     <main className="flex min-h-screen flex-col items-center justify-start gap-5 bg-primary">
       <div className="relative flex flex-col gap-4 items-center justify-center my-12 w-[90%]">
         <div className="flex gap-4 items-center w-full">
-          <div className="w-[15%] flex flex-col items-end">
+          <div className="w-[10%] flex flex-col items-end">
             <div
               className="w-fit text-4xl text-primaryText font-extrabold text-right"
               suppressHydrationWarning
@@ -151,6 +170,12 @@ export default function Result() {
           </div>
 
           <div className="w-full flex flex-row bg-white py-3 px-5 items-center justify-center rounded-full">
+            <Button
+              className="py-2 px-5 bg-primaryContainer text-primaryText mr-2"
+              onClick={handleHome}
+            >
+              Home
+            </Button>
             <TextField
               className="w-full"
               placeholder="You are safe to pry here :)"
@@ -204,7 +229,9 @@ export default function Result() {
         </div>
 
         <div className="w-full flex text-sm items-center justify-center text-stone-400 ">
-          <div>100 documents are retrieved in 0.0001 seconds.</div>
+          <div>
+            {searchResult?.total} documents are retrieved in {timer} seconds.
+          </div>
           <Image
             src="/CradrenFast.svg"
             alt="Cradren Fast"
@@ -216,26 +243,41 @@ export default function Result() {
           ></Image>
         </div>
         <div className="flex flex-col w-full justify-center items-center gap-4">
-          {searchResult.map((result, index) => (
-            <div
-              className="flex w-[70%] gap-4"
-              key={index}
-              onClick={() => handleDocumentClick(result.id)}
-            >
-              <Container className="flex w-full">
-                <div className="text-primaryText text-base font-bold">
-                  {result.title}
-                </div>
-                <div className="line-clamp-3 text-stone-400 text-sm font-normal">
-                  {result.preview}
-                </div>
-              </Container>
+          {!searchResult ? (
+            <AiOutlineLoading3Quarters
+              className="animate-spin text-primaryText"
+              size={30}
+            />
+          ) : searchResult.data.length == 0 ? (
+            <div className="flex flex-col w-full px-12 justify-center items-center gap-5">
+              <div className="text-stone-500 text-lg font-normal">
+                No relevant documents found
+              </div>
             </div>
-          ))}
+          ) : (
+            <div className="flex flex-col w-full px-12 justify-center items-center gap-5">
+              {searchResult.data.map((result, index) => (
+                <div
+                  className="flex w-full gap-4"
+                  key={index}
+                  onClick={() => handleDocumentClick(result.id)}
+                >
+                  <Container className="flex w-full" useAnimation>
+                    <div className="text-primaryText text-base font-bold">
+                      {result.title}
+                    </div>
+                    <div className="line-clamp-3 text-stone-400 text-sm font-normal">
+                      {result.preview}
+                    </div>
+                  </Container>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div className="relative top-4">
           <Pagination
-            count={10}
+            count={searchResult?.last_page}
             shape="rounded"
             onChange={handlePaginationChange}
           />

@@ -5,4 +5,5 @@ export interface ContainerProps {
   children?: ReactNode;
   onClick?: () => void;
   isLoading?: boolean;
+  useAnimation?: boolean;
 }

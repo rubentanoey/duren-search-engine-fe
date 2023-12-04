@@ -13,6 +13,7 @@ export default function Home() {
   const [dateTime, setDateTime] = useState(new Date());
   const [searchValue, setSearchValue] = useState("");
   const [methodValue, setMethodValue] = useState("");
+  const [isShowHistory, setIsShowHistory] = useState(false);
   const [historyData, setHistoryData] = useState<Array<HistoryProps>>([]);
 
   useEffect(() => {
@@ -98,7 +99,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center gap-8 p-24 bg-primary">
+    <main className="relative flex min-h-screen items-center justify-center gap-8 p-24 bg-primary">
       <div className="w-full flex flex-col items-center justify-center gap-5">
         <div className="flex flex-col gap-2 items-center">
           <div
@@ -161,29 +162,44 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="w-[25%] h-[500px] overflow-y-auto rounded-2xl">
-        <div className="flex flex-col w-full justify-center items-center gap-4">
-          {historyData.map(data => (
-            <Container className="flex-col w-full gap-2" key={data.date}>
-              <div className="text-primaryText text-lg font-bold">
-                {data.date}
+      <Button
+        className={`absolute top-5 right-5 py-2 px-5 ${
+          !isShowHistory ? "bg-primaryText" : "bg-primaryText/50"
+        }`}
+        onClick={() => setIsShowHistory(!isShowHistory)}
+      >
+        Show History
+      </Button>
+      {isShowHistory && (
+        <div className="w-[25%] h-[500px] overflow-y-auto rounded-2xl">
+          <div className="flex flex-col w-full justify-center items-center gap-4">
+            {historyData.length == 0 && (
+              <div className="text-stone-500 text-lg font-normal">
+                No history found
               </div>
-              {data.queries.map((item, index) => (
-                <div className="flex w-full" key={index}>
-                  <div className="flex w-full justify-between gap-4">
-                    <div className="text-stone-500 text-base font-semibold">
-                      {item.query}
-                    </div>
-                    <div className="text-stone-400 text-sm font-normal">
-                      {formatTime(item.time)}
+            )}
+            {historyData.map(data => (
+              <Container className="flex-col w-full gap-2" key={data.date}>
+                <div className="text-primaryText text-lg font-bold">
+                  {data.date}
+                </div>
+                {data.queries.map((item, index) => (
+                  <div className="flex w-full" key={index}>
+                    <div className="flex w-full justify-between gap-4">
+                      <div className="text-stone-500 text-base font-semibold">
+                        {item.query}
+                      </div>
+                      <div className="text-stone-400 text-sm font-normal">
+                        {formatTime(item.time)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </Container>
-          ))}
+                ))}
+              </Container>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </main>
   );
 }
