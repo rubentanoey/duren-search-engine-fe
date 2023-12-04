@@ -5,3 +5,11 @@ export interface HistoryProps {
     time: string;
   }>;
 }
+
+export interface DocumentsProps {
+  id: string;
+  title: string;
+  preview?: string;
+  content?: string;
+  score?: number;
+}

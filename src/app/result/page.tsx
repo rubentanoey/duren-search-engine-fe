@@ -11,15 +11,13 @@ import {
   Dropdown,
   TextField,
 } from "../../components/elements";
-import { SearchResultProps } from "./interfaces";
+import { DocumentsProps } from "../interfaces";
 
 export default function Result() {
   const [dateTime, setDateTime] = useState<Date>(new Date());
   const [searchValue, setSearchValue] = useState<string>("");
   const [methodValue, setMethodValue] = useState<string>("");
-  const [searchResult, setSearchResult] = useState<Array<SearchResultProps>>(
-    []
-  );
+  const [searchResult, setSearchResult] = useState<Array<DocumentsProps>>([]);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -86,7 +84,7 @@ export default function Result() {
     const queryGiven = searchParams.get("query");
     try {
       const deviceId = localStorage.getItem("device_id");
-      console.log(deviceId)
+      console.log(deviceId);
       if (methodGiven?.includes("+")) {
         const substring = methodGiven.split("+");
         const method = substring[0];
