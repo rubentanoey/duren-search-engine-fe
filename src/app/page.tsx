@@ -52,7 +52,7 @@ export default function Home() {
     setMethodValue(selectedMethod);
   };
 
-  const handleSearchClick = async () => {
+  const handleSearchClick = async (query?: string) => {
     try {
       const sanitizedMethod = methodValue.replace(/-/g, "");
       const lowercaseMethod = sanitizedMethod.toLowerCase();
@@ -60,7 +60,7 @@ export default function Home() {
       const params = new URLSearchParams(searchParams);
       params.delete("query");
       params.delete("method");
-      params.set("query", searchValue);
+      params.set("query", !!query ? query : searchValue);
       params.set("method", !!lowercaseMethod ? lowercaseMethod : "bm25");
 
       router.push("/result" + "?" + params.toString());
@@ -154,7 +154,7 @@ export default function Home() {
               </svg>
               <Button
                 className="bg-primaryText py-2 px-5"
-                onClick={handleSearchClick}
+                onClick={() => handleSearchClick()}
               >
                 Search
               </Button>
@@ -179,12 +179,17 @@ export default function Home() {
               </div>
             )}
             {historyData.map(data => (
-              <Container className="flex-col w-full gap-2" key={data.date}>
+              <Container className="flex-col w-full gap-[8px]" key={data.date}>
                 <div className="text-primaryText text-lg font-bold">
                   {data.date}
                 </div>
                 {data.queries.map((item, index) => (
-                  <div className="flex w-full" key={index}>
+                  <Container
+                    className="flex w-full bg-white/75"
+                    useAnimation
+                    key={index}
+                    onClick={() => handleSearchClick(item.query)}
+                  >
                     <div className="flex w-full justify-between gap-4">
                       <div className="text-stone-500 text-base font-semibold">
                         {item.query}
@@ -193,7 +198,7 @@ export default function Home() {
                         {formatTime(item.time)}
                       </div>
                     </div>
-                  </div>
+                  </Container>
                 ))}
               </Container>
             ))}
