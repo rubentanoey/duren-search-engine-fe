@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Dropdown, TextField } from "../components/elements";
-import { HistoryProps } from "./interfaces";
+import { HistoryProps, WeatherDataProps } from "./interfaces";
 
 export default function Home() {
   const router = useRouter();
@@ -15,6 +15,8 @@ export default function Home() {
   const [methodValue, setMethodValue] = useState("");
   const [isShowHistory, setIsShowHistory] = useState(false);
   const [historyData, setHistoryData] = useState<Array<HistoryProps>>([]);
+  const [weatherData, setWeatherData] = useState<WeatherDataProps>();
+  const [weatherMain, setWeatherMain] = useState("");
 
   useEffect(() => {
     const deviceId = localStorage.getItem("device_id");
@@ -88,8 +90,25 @@ export default function Home() {
     }
   };
 
+  const handleWeatherInfo = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?lat=6.40&lon=106.79&appid=${process.env.NEXT_PUBLIC_WEATHER_API}`
+      );
+      setWeatherData(response.data);
+      setWeatherMain(response.data.weather[0].main);
+      console.log("Weather success:", response.data);
+    } catch (error) {
+      console.error("Weather error:", error);
+    }
+  };
+
   useEffect(() => {
     handleHistory();
+  }, []);
+
+  useEffect(() => {
+    handleWeatherInfo();
   }, []);
 
   const formatTime = (time: string) => {
@@ -99,16 +118,16 @@ export default function Home() {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center gap-8 p-24 bg-primary">
-      <div className="w-full flex flex-col items-center justify-center gap-5">
+    <main className="relative flex flex-col min-h-screen items-center justify-center p-12 bg-primary">
+      <div className="w-[70%] flex flex-col items-center justify-center gap-5">
         <div className="flex flex-col gap-2 items-center">
           <div
-            className="text-7xl text-primaryText font-black"
+            className="text-6xl text-primaryText font-black"
             suppressHydrationWarning
           >
             {dateTime.toLocaleString("en-US", { timeStyle: "short" })}
           </div>
-          <div className="text-5xl text-secondaryText font-semibold">
+          <div className="text-4xl text-secondaryText font-semibold">
             {greeting}
           </div>
         </div>
@@ -162,49 +181,131 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <Button
-        className={`absolute top-5 right-5 py-2 px-5 ${
-          !isShowHistory ? "bg-primaryText" : "bg-primaryText/50"
-        }`}
-        onClick={() => setIsShowHistory(!isShowHistory)}
-      >
-        Show History
-      </Button>
-      {isShowHistory && (
-        <div className="w-[25%] h-[500px] overflow-y-auto rounded-2xl">
-          <div className="flex flex-col w-full justify-center items-center gap-4">
-            {historyData.length == 0 && (
-              <div className="text-stone-500 text-lg font-normal">
-                No history found
-              </div>
-            )}
-            {historyData.map(data => (
-              <Container className="flex-col w-full gap-[8px]" key={data.date}>
-                <div className="text-primaryText text-lg font-bold">
-                  {data.date}
-                </div>
-                {data.queries.map((item, index) => (
+      <div className="flex flex-row gap-10 w-[70%]">
+        <div className="flex flex-col gap-4 w-[60%] rounded-2xl">
+          <div className="flex flex-row items-center justify-start rounded-full gap-2">
+            <Button
+              className={`right-5 py-2 px-5 text-primaryText hover:scale-[102%] ${
+                !isShowHistory ? "bg-icons" : "bg-icons/30"
+              }`}
+              onClick={() => setIsShowHistory(false)}
+            >
+              Shortcuts
+            </Button>
+            <Button
+              className={`right-5 py-2 px-5 text-primaryText hover:scale-[102%] ${
+                isShowHistory ? "bg-icons" : "bg-icons/30"
+              }`}
+              onClick={() => setIsShowHistory(true)}
+            >
+              History
+            </Button>
+          </div>
+
+          {isShowHistory && (
+            <div className="h-[240px] overflow-y-auto rounded-2xl">
+              <div className="flex flex-col w-full justify-center items-center gap-4">
+                {historyData.length == 0 && (
+                  <div className="text-stone-500 text-lg font-normal">
+                    No history found
+                  </div>
+                )}
+                {historyData.map((data) => (
                   <Container
-                    className="flex w-full bg-white/75"
-                    useAnimation
-                    key={index}
-                    onClick={() => handleSearchClick(item.query)}
+                    className="flex-col w-full gap-[8px] px-6 py-5"
+                    key={data.date}
                   >
-                    <div className="flex w-full justify-between gap-4">
-                      <div className="text-stone-500 text-base font-semibold">
-                        {item.query}
-                      </div>
-                      <div className="text-stone-400 text-sm font-normal">
-                        {formatTime(item.time)}
-                      </div>
+                    <div className="text-primaryText text-sm font-medium flex flex-row gap-2 items-center w-full">
+                      {data.date}
+                      <hr className="my-2 border border-gray-300" />
                     </div>
+                    {data.queries.map((item, index) => (
+                      <Container
+                        className="px-3 py-2 flex w-full bg-white/70"
+                        useAnimation
+                        key={index}
+                        onClick={() => handleSearchClick(item.query)}
+                      >
+                        <div className="flex w-full justify-between items-center gap-4">
+                          <div className="text-stone-500 text-base font-semibold">
+                            {item.query}
+                          </div>
+                          <div className="text-stone-400 text-base font-normal">
+                            {formatTime(item.time)}
+                          </div>
+                        </div>
+                      </Container>
+                    ))}
                   </Container>
                 ))}
-              </Container>
-            ))}
-          </div>
+              </div>
+            </div>
+          )}
+          {!isShowHistory && (
+            <div className="h-[240px] rounded-2xl">
+              <div className="flex flex-wrap w-full justify-start items-between">
+                <Container className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                  <Image
+                    src="YouTube.svg"
+                    alt="YouTube"
+                    height={40}
+                    width={40}
+                  ></Image>
+                  YouTube
+                </Container>
+                <Container className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                  <Image
+                    src="Wiki.svg"
+                    alt="Wiki"
+                    height={40}
+                    width={40}
+                  ></Image>
+                  Wiki
+                </Container>
+                <Container className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                  <Image
+                    src="Facebook.svg"
+                    alt="Facebook"
+                    height={40}
+                    width={40}
+                  ></Image>
+                  Facebook
+                </Container>
+                <Container className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                  <Image src="X.svg" alt="X" height={40} width={40}></Image>X
+                </Container>
+                <Container className="flex flex-col text-primaryText/70 w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                  <Image src="Add.svg" alt="Add" height={40} width={40}></Image>
+                  Add
+                </Container>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+        <div className="flex flex-col gap-4 w-full rounded-2xl">
+          <Container className="w-full h-full p-10">
+            <div className="flex flex-col justify-end">
+              <div className="text-5xl font-extrabold text-right text-primaryText">
+                {weatherData?.main.temp &&
+                  `${(weatherData.main.temp - 273.15).toFixed(0)}°C`}
+              </div>
+              <div className="text-xl font-semibold text-right text-primaryText/50">
+                Depok
+              </div>
+            </div>
+            <div className="">
+              <Image
+                className="relative bottom-[7%] right-[-8%]"
+                src={`weather/${weatherMain}.svg`}
+                alt={`${weatherMain}`}
+                width={360}
+                height={360}
+                priority={false}
+              ></Image>
+            </div>
+          </Container>
+        </div>
+      </div>
     </main>
   );
 }

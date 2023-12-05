@@ -16,6 +16,7 @@ const config: Config = {
       colors: {
         primary: "#FAFAF0", // Floral White
         primaryContainer: "#F4F4E2", // Beige
+        secondaryContainer: "#ECECC5", // Pale Goldenrod
         primaryText: "#1B3D2F", // Dark Slate Green
         secondaryText: "#DDDDB2", // Dutch White
         icons: "#D3E46B", // Khaki

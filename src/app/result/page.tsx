@@ -157,7 +157,7 @@ export default function Result() {
     <main className="flex min-h-screen flex-col items-center justify-start gap-5 bg-primary">
       <div className="relative flex flex-col gap-4 items-center justify-center my-12 w-[90%]">
         <div className="flex gap-4 items-center w-full">
-          <div className="w-[10%] flex flex-col items-end">
+          <div className="w-[15%] flex flex-col items-end">
             <div
               className="w-fit text-4xl text-primaryText font-extrabold text-right"
               suppressHydrationWarning
@@ -237,9 +237,6 @@ export default function Result() {
             alt="Cradren Fast"
             width={70}
             height={70}
-            onClick={() => {
-              router.push("/");
-            }}
           ></Image>
         </div>
         <div className="flex flex-col w-full justify-center items-center gap-4">
@@ -262,7 +259,7 @@ export default function Result() {
                   key={index}
                   onClick={() => handleDocumentClick(result.id)}
                 >
-                  <Container className="flex w-full" useAnimation>
+                  <Container className="flex w-full px-6 py-4" useAnimation>
                     <div className="text-primaryText text-base font-bold">
                       {result.title}
                     </div>

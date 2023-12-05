@@ -41,7 +41,7 @@ export default function Details() {
       console.log("Search error: No document id given");
     }
   };
-  
+
   const handleRelDocs = async () => {
     setRelDocsList(undefined);
     if (doc_idGiven) {
@@ -135,7 +135,7 @@ export default function Details() {
                   key={index}
                   onClick={() => handleDocumentClick(result.id)}
                 >
-                  <Container className="flex w-full" useAnimation>
+                  <Container className="flex w-full px-6 py-4" useAnimation>
                     <div className="text-primaryText text-base font-bold">
                       {result.title}
                     </div>
