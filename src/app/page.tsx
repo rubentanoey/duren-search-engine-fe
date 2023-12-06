@@ -300,10 +300,22 @@ export default function Home() {
                 >
                   <Image src="X.svg" alt="X" height={40} width={40}></Image>X
                 </Container>
-                <Container className="flex flex-col text-primaryText/70 w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                <Container
+                  onClick={() => handleLinkClick("https://weather.com/")}
+                  className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer"
+                >
+                  <Image src="Weather.svg" alt="Weather" height={40} width={40}></Image>Weather
+                </Container>
+                <Container
+                  onClick={() => handleLinkClick("https://weather.com/")}
+                  className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer"
+                >
+                  <Image src="OpenAI.svg" alt="OpenAI" height={40} width={40}></Image>OpenAI
+                </Container>
+                {/* <Container className="flex flex-col text-primaryText/70 w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
                   <Image src="Add.svg" alt="Add" height={40} width={40}></Image>
                   Add
-                </Container>
+                </Container> */}
               </div>
             </div>
           )}

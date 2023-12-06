@@ -169,14 +169,14 @@ export default function Result() {
           >
             Home
           </Button>
-          <div className="md:w-[15%] flex flex-col items-end">
+          <div className="md:w-[15%] flex flex-col items-center md:items-end">
             <div
-              className="text-4xl text-primaryText font-extrabold text-right"
+              className="text-4xl text-primaryText font-extrabold text-center md:text-right"
               suppressHydrationWarning
             >
               {dateTime.toLocaleString("en-US", { timeStyle: "short" })}
             </div>
-            <div className="text-xl text-secondaryText font-semibold text-right">
+            <div className="text-xl text-secondaryText font-semibold text-center md:text-right">
               {greeting}
             </div>
           </div>
@@ -259,7 +259,7 @@ export default function Result() {
             />
           ) : searchResult.data.length == 0 ? (
             <div className="flex flex-col w-full px-12 justify-center items-center gap-5">
-              <div className="text-stone-500 text-lg font-normal">
+              <div className="text-stone-500 text-lg font-normal text-center">
                 No relevant documents found
               </div>
             </div>

@@ -52,7 +52,6 @@ export default function Details() {
         setRelDocsList(response.data.data);
         console.log("Search success:", response.data);
       } catch (error) {
-        // Handle errors
         console.error("Search error:", error);
       }
     } else {
@@ -74,7 +73,6 @@ export default function Details() {
       params.delete("doc_id");
       params.set("doc_id", doc_id);
       router.push("/details" + "?" + params.toString());
-      // console.log(doc_id);
     } catch (error) {
       console.error("Search error:", error);
     }
