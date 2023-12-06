@@ -128,7 +128,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative flex flex-col items-center justify-start md:justify-center px-4 py-12 md:p-12 bg-primary">
+    <main className="relative min-h-screen flex flex-col items-center justify-start md:justify-center px-4 py-12 md:p-12 bg-primary">
       <div className="md:w-[70%] flex flex-col items-center justify-center gap-5">
         <div className="flex flex-col gap-2 items-center">
           <div
