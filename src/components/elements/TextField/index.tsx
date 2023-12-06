@@ -6,6 +6,7 @@ import { TextFieldProps } from "./interface";
 export const TextField: React.FC<TextFieldProps> = ({
   className,
   onChange,
+  onKeyDown,
   disabled,
   isLoading,
   placeholder,
@@ -18,29 +19,30 @@ export const TextField: React.FC<TextFieldProps> = ({
       >
         <div className="flex flex-row gap-3 w-full">
           <div className="flex flex-row gap-1">
-            <span className="text-icons text-3xl">
+            <span className="text-icons text-xl md:text-3xl">
               <MdOutlineSearch />
             </span>
-            <svg
-              width="2"
-              height="30"
-              viewBox="0 0 2 30"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <line
-                x1="0.5"
-                y1="30"
-                x2="0.5"
-                y2="0.5"
-                stroke="#CBE04C"
-                strokeWidth="2"
-              />
-            </svg>
+            <div className="w-[2px] h-full hidden md:flex">
+              <svg
+                viewBox="0 0 2 30"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="line"
+              >
+                <line
+                  x1="0.5"
+                  y1="30"
+                  x2="0.5"
+                  y2="0.5"
+                  stroke="#CBE04C"
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
           </div>
           <input
             type="text"
-            className={`w-full flex text-xl font-base transition-all outline-none text-primaryText placeholder-secondaryText  ${
+            className={`w-full flex text-base md:text-xl font-base transition-all outline-none text-primaryText placeholder-secondaryText  ${
               isLoading ? "cursor-not-allowed" : "cursor-text"
             }
           ${
@@ -52,6 +54,7 @@ export const TextField: React.FC<TextFieldProps> = ({
             placeholder={placeholder}
             value={value}
             onChange={onChange}
+            onKeyDown={onKeyDown}
             disabled={disabled || isLoading}
           />
         </div>

@@ -117,17 +117,27 @@ export default function Home() {
     return timeOnly;
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearchClick();
+    }
+  };
+
+  const handleLinkClick = (link: string) => {
+    window.location.href = link;
+  };
+
   return (
-    <main className="relative flex flex-col min-h-screen items-center justify-center p-12 bg-primary">
-      <div className="w-[70%] flex flex-col items-center justify-center gap-5">
+    <main className="relative flex flex-col items-center justify-start md:justify-center px-4 py-12 md:p-12 bg-primary">
+      <div className="md:w-[70%] flex flex-col items-center justify-center gap-5">
         <div className="flex flex-col gap-2 items-center">
           <div
-            className="text-6xl text-primaryText font-black"
+            className="text-5xl md:text-6xl text-primaryText font-black"
             suppressHydrationWarning
           >
             {dateTime.toLocaleString("en-US", { timeStyle: "short" })}
           </div>
-          <div className="text-4xl text-secondaryText font-semibold">
+          <div className="text-3xl md:text-4xl text-secondaryText font-semibold">
             {greeting}
           </div>
         </div>
@@ -143,34 +153,36 @@ export default function Home() {
           <div className="relative top-[-42px] flex flex-row w-full bg-white py-3 px-5 items-center justify-center rounded-full">
             <TextField
               className="w-full"
-              placeholder="You are safe to pry here :)"
+              placeholder="Search Now :)"
               value={searchValue}
               onChange={handleSearchChange}
+              onKeyDown={handleKeyDown}
             />
 
             <div className="flex flex-row gap-2 items-center justify-center">
               <Dropdown
-                className="w-40"
+                className="w-40 hidden md:flex md:justify-end"
                 placeholder="Select Method"
                 value={methodValue}
                 onChange={handleMethodChange}
               ></Dropdown>
-              <svg
-                width="2"
-                height="30"
-                viewBox="0 0 2 30"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line
-                  x1="0.5"
-                  y1="30"
-                  x2="0.5"
-                  y2="0.5"
-                  stroke="#CBE04C"
-                  strokeWidth="2"
-                />
-              </svg>
+              <div className="w-[2px] h-full hidden md:flex">
+                <svg
+                  viewBox="0 0 2 30"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="line"
+                >
+                  <line
+                    x1="0.5"
+                    y1="30"
+                    x2="0.5"
+                    y2="0.5"
+                    stroke="#CBE04C"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </div>
               <Button
                 className="bg-primaryText py-2 px-5"
                 onClick={() => handleSearchClick()}
@@ -181,8 +193,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="flex flex-row gap-10 w-[70%]">
-        <div className="flex flex-col gap-4 w-[60%] rounded-2xl">
+      <div className="flex flex-col md:flex-row gap-10 md:w-[70%]">
+        <div className="flex flex-col gap-4 md:w-[60%] rounded-2xl">
           <div className="flex flex-row items-center justify-start rounded-full gap-2">
             <Button
               className={`right-5 py-2 px-5 text-primaryText hover:scale-[102%] ${
@@ -207,7 +219,9 @@ export default function Home() {
               <div className="flex flex-col w-full justify-center items-center gap-4">
                 {historyData.length == 0 && (
                   <div className="text-stone-500 text-lg font-normal">
-                    No history found
+                    <Container className="flex-col w-full gap-[8px] px-6 py-5">
+                      No history found
+                    </Container>
                   </div>
                 )}
                 {historyData.map((data) => (
@@ -244,7 +258,10 @@ export default function Home() {
           {!isShowHistory && (
             <div className="h-[240px] rounded-2xl">
               <div className="flex flex-wrap w-full justify-start items-between">
-                <Container className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                <Container
+                  onClick={() => handleLinkClick("https://www.youtube.com")}
+                  className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer"
+                >
                   <Image
                     src="YouTube.svg"
                     alt="YouTube"
@@ -253,7 +270,10 @@ export default function Home() {
                   ></Image>
                   YouTube
                 </Container>
-                <Container className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                <Container
+                  onClick={() => handleLinkClick("https://www.wikipedia.org/")}
+                  className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer"
+                >
                   <Image
                     src="Wiki.svg"
                     alt="Wiki"
@@ -262,7 +282,10 @@ export default function Home() {
                   ></Image>
                   Wiki
                 </Container>
-                <Container className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                <Container
+                  onClick={() => handleLinkClick("https://www.facebook.com/")}
+                  className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer"
+                >
                   <Image
                     src="Facebook.svg"
                     alt="Facebook"
@@ -271,7 +294,10 @@ export default function Home() {
                   ></Image>
                   Facebook
                 </Container>
-                <Container className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
+                <Container
+                  onClick={() => handleLinkClick("https://twitter.com/")}
+                  className="flex flex-col text-primaryText w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer"
+                >
                   <Image src="X.svg" alt="X" height={40} width={40}></Image>X
                 </Container>
                 <Container className="flex flex-col text-primaryText/70 w-[33%] h-[116px] justify-center items-center bg-transparent hover:bg-primaryContainer">
@@ -282,9 +308,9 @@ export default function Home() {
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-4 w-full rounded-2xl">
+        <div className="flex flex-col gap-4 md:w-full rounded-2xl">
           <Container className="w-full h-full p-10">
-            <div className="flex flex-col justify-end">
+            <div className="w-[50%] flex flex-col justify-end">
               <div className="text-5xl font-extrabold text-right text-primaryText">
                 {weatherData?.main.temp &&
                   `${(weatherData.main.temp - 273.15).toFixed(0)}°C`}
@@ -292,14 +318,17 @@ export default function Home() {
               <div className="text-xl font-semibold text-right text-primaryText/50">
                 Depok
               </div>
+              <div className="pt-3 text-base font-base text-right text-primaryText/50">
+                {weatherData?.weather[0].description}
+              </div>
             </div>
-            <div className="">
+            <div className="w-full">
               <Image
-                className="relative bottom-[7%] right-[-8%]"
+                className="relative"
                 src={`weather/${weatherMain}.svg`}
                 alt={`${weatherMain}`}
-                width={360}
-                height={360}
+                width={300}
+                height={300}
                 priority={false}
               ></Image>
             </div>

@@ -153,69 +153,82 @@ export default function Result() {
     handleSearchResult();
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearchClick();
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-start gap-5 bg-primary">
-      <div className="relative flex flex-col gap-4 items-center justify-center my-12 w-[90%]">
-        <div className="flex gap-4 items-center w-full">
-          <div className="w-[15%] flex flex-col items-end">
+      <div className="relative flex flex-col gap-4 items-center justify-center px-4 py-12 md:my-12 md:px-0 md:py-0 w-full md:w-[90%]">
+        <div className="flex flex-col md:flex-row gap-4 items-center w-full">
+          <Button
+            className="md:hidden py-2 px-5 bg-primaryContainer text-primaryText mr-2"
+            onClick={handleHome}
+          >
+            Home
+          </Button>
+          <div className="md:w-[15%] flex flex-col items-end">
             <div
-              className="w-fit text-4xl text-primaryText font-extrabold text-right"
+              className="text-4xl text-primaryText font-extrabold text-right"
               suppressHydrationWarning
             >
               {dateTime.toLocaleString("en-US", { timeStyle: "short" })}
             </div>
-            <div className="w-fit text-xl text-secondaryText font-semibold text-right">
+            <div className="text-xl text-secondaryText font-semibold text-right">
               {greeting}
             </div>
           </div>
 
-          <div className="w-full flex flex-row bg-white py-3 px-5 items-center justify-center rounded-full">
+          <div className="flex flex-row w-full bg-white py-3 px-5 items-center justify-center rounded-full">
             <Button
-              className="py-2 px-5 bg-primaryContainer text-primaryText mr-2"
+              className="hidden md:flex py-2 px-5 bg-primaryContainer text-primaryText mr-2"
               onClick={handleHome}
             >
               Home
             </Button>
             <TextField
               className="w-full"
-              placeholder="You are safe to pry here :)"
+              placeholder="Search Now :)"
               value={searchValue}
               onChange={handleSearchChange}
+              onKeyDown={handleKeyDown}
             />
 
             <div className="flex flex-row gap-2 items-center justify-center">
               <Dropdown
-                className="w-40"
+                className="w-40 hidden md:flex md:justify-end"
                 placeholder="Select Method"
                 value={methodValue}
                 onChange={handleMethodChange}
               ></Dropdown>
-              <svg
-                width="2"
-                height="30"
-                viewBox="0 0 2 30"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line
-                  x1="0.5"
-                  y1="30"
-                  x2="0.5"
-                  y2="0.5"
-                  stroke="#CBE04C"
-                  strokeWidth="2"
-                />
-              </svg>
+              <div className="w-[2px] h-full hidden md:flex">
+                <svg
+                  viewBox="0 0 2 30"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="line"
+                >
+                  <line
+                    x1="0.5"
+                    y1="30"
+                    x2="0.5"
+                    y2="0.5"
+                    stroke="#CBE04C"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </div>
               <Button
                 className="bg-primaryText py-2 px-5"
-                onClick={handleSearchClick}
+                onClick={() => handleSearchClick()}
               >
                 Search
               </Button>
             </div>
           </div>
         </div>
-
         <div className="w-full">
           <svg
             width="100%"
@@ -227,8 +240,7 @@ export default function Result() {
             <line x1="0" y1="0.5" x2="1400" y2="0.5" stroke="#F4F4E2" />
           </svg>
         </div>
-
-        <div className="w-full flex text-sm items-center justify-center text-stone-400 ">
+        <div className="w-[80%] md:w-full flex text-sm items-center justify-center text-stone-400 ">
           <div>
             {searchResult?.total} documents are retrieved in {timer} seconds.
           </div>
@@ -252,18 +264,21 @@ export default function Result() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col w-full px-12 justify-center items-center gap-5">
+            <div className="flex flex-col w-full md:px-12 justify-center items-center gap-5">
               {searchResult.data.map((result, index) => (
                 <div
                   className="flex w-full gap-4"
                   key={index}
                   onClick={() => handleDocumentClick(result.id)}
                 >
-                  <Container className="flex w-full px-6 py-4" useAnimation>
-                    <div className="text-primaryText text-base font-bold">
+                  <Container
+                    className="flex flex-col md:flex-row w-full px-6 py-4 gap-0 md:gap-4"
+                    useAnimation
+                  >
+                    <div className="w-full md:w-fit text-primaryText text-base font-bold text-start">
                       {result.title}
                     </div>
-                    <div className="line-clamp-3 text-stone-400 text-sm font-normal">
+                    <div className="w-full md:w-fit line-clamp-3 text-stone-400 text-sm font-normal text-start">
                       {result.preview}
                     </div>
                   </Container>

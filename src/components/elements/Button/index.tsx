@@ -15,7 +15,7 @@ export const Button: React.FC<ButtonProps> = ({
       <button
         onClick={onClick}
         disabled={disabled || isLoading}
-        className={` flex h-fit select-none items-center justify-center gap-1 rounded-3xl text-sm font-medium transition-all 
+        className={` flex select-none items-center justify-center gap-1 rounded-3xl text-xs md:text-sm font-medium transition-all 
           text-primaryContainer hover:drop-shadow-lg active:bg-cream-normal active:text-primary active:drop-shadow-none ${className} ${
           isLoading
             ? "border-black disabled:bg-orange-dark"

@@ -82,24 +82,44 @@ export default function Details() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start gap-5 bg-primary">
-      <div className="relative flex flex-col gap-8 items-center justify-center my-12 w-[70%]">
+      <div className="relative flex flex-col gap-8 items-center justify-center px-4 py-12 md:my-12 md:px-0 md:py-0 md:w-[70%]">
         {!!documentDetail ? (
-          <div className="flex flex-col gap-8">
-            <div className="w-full flex flex-row bg-white py-3 px-5 items-center justify-center rounded-full">
-              <Button className="py-2 px-5 bg-primaryText" onClick={handleBack}>
-                Back
-              </Button>
-              <div className="text-primaryText text-2xl font-bold w-full text-center">
-                {documentDetail?.title}
+          <div className="flex flex-col gap-6 md:gap-8">
+            <div className="flex flex-col gap-3 w-full">
+              <div className="flex flex-row w-full justify-between">
+                <Button
+                  className=" md:hidden py-2 px-5 bg-primaryText"
+                  onClick={handleBack}
+                >
+                  Back
+                </Button>
+                <Button
+                  className=" md:hidden py-2 px-5 bg-primaryContainer text-primaryText"
+                  onClick={handleHome}
+                >
+                  Home
+                </Button>
               </div>
-              <Button
-                className="py-2 px-5 bg-primaryContainer text-primaryText"
-                onClick={handleHome}
-              >
-                Home
-              </Button>
+
+              <div className="w-full flex flex-row bg-white py-3 px-5 items-center justify-center rounded-full">
+                <Button
+                  className="hidden md:flex py-2 px-5 bg-primaryText"
+                  onClick={handleBack}
+                >
+                  Back
+                </Button>
+                <div className="text-primaryText text-lg md:text-2xl font-bold w-full text-center">
+                  {documentDetail?.title}
+                </div>
+                <Button
+                  className="hidden md:flex py-2 px-5 bg-primaryContainer text-primaryText"
+                  onClick={handleHome}
+                >
+                  Home
+                </Button>
+              </div>
             </div>
-            <div className="w-full text-stone-500 text-lg px-12">
+            <div className="w-full text-stone-500 text-sm md:text-lg px-4 md:px-12">
               {documentDetail?.content}
             </div>
           </div>
@@ -109,7 +129,7 @@ export default function Details() {
             size={30}
           />
         )}
-        <div className="flex flex-col w-full px-12 justify-center items-center gap-5">
+        <div className="flex flex-col w-full md:px-12 justify-center items-center gap-5">
           <Image
             src="/Cradren.svg"
             alt="Cradren"
@@ -122,24 +142,27 @@ export default function Details() {
         </div>
         {!!relDocsList ? (
           relDocsList.length == 0 ? (
-            <div className="flex flex-col w-full px-12 justify-center items-center gap-5">
+            <div className="flex flex-col w-full md:px-12 justify-center items-center gap-5">
               <div className="text-stone-500 text-lg font-normal">
                 No relevant documents found
               </div>
             </div>
           ) : (
-            <div className="flex flex-col w-full px-12 justify-center items-center gap-5">
+            <div className="flex flex-col w-full md:px-12 justify-center items-center gap-5">
               {relDocsList.map((result, index) => (
                 <div
                   className="flex w-full gap-4"
                   key={index}
                   onClick={() => handleDocumentClick(result.id)}
                 >
-                  <Container className="flex w-full px-6 py-4" useAnimation>
-                    <div className="text-primaryText text-base font-bold">
+                  <Container
+                    className="flex flex-col md:flex-row w-full px-6 py-4 gap-0 md:gap-4"
+                    useAnimation
+                  >
+                    <div className="w-full md:w-fit text-primaryText text-base font-bold text-start">
                       {result.title}
                     </div>
-                    <div className="line-clamp-3 text-stone-400 text-sm font-normal">
+                    <div className="w-full md:w-fit line-clamp-3 text-stone-400 text-sm font-normal text-start">
                       {result.preview}
                     </div>
                   </Container>
